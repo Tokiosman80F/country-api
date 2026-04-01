@@ -11,10 +11,10 @@ const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
 
-const render = function (data) {
+const render = function (data, classname) {
   const languages = Object.values(data.languages).join(',');
   const currencyName = Object.values(data.currencies)[0].name;
-  const html = `<article class="country">
+  const html = `<article class="country ${classname}">
           <img class="country__img" src="${data.flags.png}" alt='${data.flags.alt}' />
           <div class="country__data">
             <h3 class="country__name">${data.name.official}</h3>
@@ -25,33 +25,77 @@ const render = function (data) {
           </div>
         </article>`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
 };
 
-const getCountryData = function (name) {
-  const request = new XMLHttpRequest();
-  request.open('GET', `https://restcountries.com/v3.1/name/${name}`);
-  request.send();
+const renderError = function (err) {
+  countriesContainer.insertAdjacentText('beforeend', err);
+};
 
-  request.addEventListener('load', function () {
-    const [data] = JSON.parse(this.responseText);
-    console.log(data);
-    render(data);
+// const getCountryData = function (name) {
+//   const request = new XMLHttpRequest();
+//   request.open('GET', `https://restcountries.com/v3.1/name/${name}`);
+//   request.send();
 
-    // get neighbour country
-    const [neighbour] = data.borders;
-    // if no neighbout found then return
-    if (!neighbour) return;
-    const request2 = new XMLHttpRequest();
-    request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbour}`);
-    request2.send();
+//   request.addEventListener('load', function () {
+//     const [data] = JSON.parse(this.responseText);
+//     console.log(data);
+//     render(data);
 
-    request2.addEventListener('load', function () {
-      const [data2] = JSON.parse(this.responseText);
-      console.log('Data 2', data2);
-      render(data2);
+//     // get neighbour country
+//     const [neighbour] = data.borders;
+//     // if no neighbout found then return
+//     if (!neighbour) return;
+//     const request2 = new XMLHttpRequest();
+//     request2.open('GET', `https://restcountries.com/v3.1/alpha/${neighbour}`);
+//     request2.send();
+
+//     request2.addEventListener('load', function () {
+//       const [data2] = JSON.parse(this.responseText);
+//       console.log('Data 2', data2);
+//       render(data2);
+//     });
+//   });
+// };
+
+// getCountryData('bangladesh');
+
+const getCountryDataFetch = function (name) {
+  fetch(`https://restcountries.com/v3.1/name/${name}`)
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Country not found : ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data[0]);
+      render(data[0]);
+      // getting the neighbour country
+      const neighbour = data[0]?.borders?.[0];
+      console.log('neighbour:', neighbour);
+
+      if (!neighbour) return null;
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(response => {
+      if (!response) return null;
+      if (!response.ok)
+        throw new Error(`Neighbour country not found : ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      if (!data) return;
+      console.log(data[0]);
+      render(data[0], 'neighbour');
+    })
+    .catch(err => {
+      console.error('Err:', err.message);
+      renderError(err.message);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
     });
-  });
 };
 
-getCountryData('bangladesh');
+btn.addEventListener('click', function () {
+  getCountryDataFetch('peru');
+});
