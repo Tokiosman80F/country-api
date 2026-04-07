@@ -1,3 +1,4 @@
 #ignore log file
 node_modules/
+.env
 *.log 
