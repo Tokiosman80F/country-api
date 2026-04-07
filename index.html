@@ -1,31 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="style.css" />
-    <script defer src="script.js"></script>
-    <title>Asynchronous JavaScript</title>
-  </head>
-  <body>
-    <main class="container">
-      <div class="countries">
-        <!--
-        <article class="country">
-          <img class="country__img" src="" />
-          <div class="country__data">
-            <h3 class="country__name">COUNTRY</h3>
-            <h4 class="country__region">REGION</h4>
-            <p class="country__row"><span>👫</span>POP people</p>
-            <p class="country__row"><span>🗣️</span>LANG</p>
-            <p class="country__row"><span>💰</span>CUR</p>
-          </div>
-        </article>
-        -->
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./output.css" />
+
+</head>
+
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+  <!-- TopNavBar -->
+  <nav
+    class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_12px_40px_rgba(25,28,29,0.06)]">
+    <div class="flex justify-between items-center px-8 py-3 max-w-[1440px] mx-auto">
+      <div class="flex items-center gap-8">
+        <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white headline-font">Global
+          Explorer</span>
+        <div class="hidden md:flex gap-6 items-center">
+          <a class="text-indigo-600 dark:text-indigo-400 font-semibold border-b-2 border-indigo-600"
+            href="#">Dashboard</a>
+          <a class="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-500 transition-colors duration-200"
+            href="#">Analytics</a>
+          <a class="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-500 transition-colors duration-200"
+            href="#">Regions</a>
+          <a class="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-500 transition-colors duration-200"
+            href="#">Map</a>
+        </div>
       </div>
-      <button class="btn-country">Where am I?</button>
-      <div class="images"></div>
-    </main>
-  </body>
+      <div class="flex-1 max-w-xl mx-12 hidden lg:block">
+        <div class="relative group">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+          <input
+            class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+            placeholder="Search countries, capitals, or regions..." type="text" />
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="p-2 rounded-full hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+        </button>
+        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed cursor-pointer">
+          <img alt="User profile menu"
+            data-alt="professional headshot of a young man with minimalist aesthetic soft studio lighting clean background"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqDSDsN6qoX0HSvQ5MMmtcEEMRXG7jW6RqPOMxdYlnz13z_FFZcIapgMKWggZf1WCJ88tcnYbr03Suc8Dz5AHi2GdED8h58UO90NyeRPOMkQBClCV6rBvljqsm-3prueJqqEb3vjKAsv8aN3t4JWMXSfUaBAnX7-nkwpwPeJ1hNicrbQBcRTbtVZwujgHy6Q2wiezpUQy9JrucXFuBRY2aVWGDLKl_vRlFC911P3A605fwL6MTO12725IqfHAeZHuVmh7KAk-reOgC" />
+        </div>
+      </div>
+    </div>
+  </nav>
+  <main class="mt-20 px-8 max-w-[1440px] mx-auto w-full pb-12">
+    <!-- Hero Section -->
+    <section class="py-16 text-center max-w-3xl mx-auto">
+      <h1 class="headline-font text-5xl font-extrabold tracking-tight text-on-surface mb-4">Explore Any Country
+        Instantly</h1>
+      <p class="text-on-surface-variant text-lg mb-10 font-body">Get real-time data, weather, currency, and more with
+        our global intelligence platform.</p>
+      <div class="relative max-w-2xl mx-auto">
+        <input
+          class="w-full px-6 py-5 bg-surface-container-lowest rounded-xl shadow-sm border-none text-lg focus:ring-2 focus:ring-primary/20 transition-all pr-36"
+          placeholder="Enter country name (e.g. Switzerland)" type="text" />
+        <button
+          class="absolute right-2 top-2 bottom-2 primary-gradient text-on-primary px-8 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+          <span class="material-symbols-outlined">explore</span>
+          Explore
+        </button>
+      </div>
+    </section>
+    <!-- Main Dashboard Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Country Overview Card -->
+      <div
+        class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
+          <span class="material-symbols-outlined text-[8rem] text-primary">public</span>
+        </div>
+        <div class="w-full md:w-64 h-40 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
+          <img class="w-full h-full object-cover"
+            data-alt="official flag of switzerland with crisp details and natural fabric texture bright daylight"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcxWGQ08qo3SAq-V7zEkqeJVPI8mbRJruvPwJipAWKxY_D2WinoCv75pc1see5MN0fRO8aBIHsd9PA_xElzMTQYKm37EBrZZQ-XMVg9bQ1GLV8rkmHQ6wuTDlf7VI0mq00QEs5Zev8v1ooDRlAumudS_wDuISf8oSJ_j8CiHcGIqhMPb7dM5Kub31smyP-Jk3rmqt8jtmb5ZL6rzl-MRNNkt8fjFFXXYSbAGO3YKHtZQy-G2OQl0dyOwpUTku64SH-DxQX1VYvvUgN" />
+        </div>
+        <div class="flex-1">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <h2 class="headline-font text-4xl font-extrabold">Switzerland</h2>
+            <span
+              class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Europe</span>
+          </div>
+          <p class="text-on-surface-variant text-lg mb-6">Bern, Swiss Confederation</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8">
+            <div>
+              <span class="text-xs text-outline uppercase font-bold tracking-widest block mb-1">Population</span>
+              <span class="text-xl font-bold text-on-surface">8.7 Million</span>
+            </div>
+            <div>
+              <span class="text-xs text-outline uppercase font-bold tracking-widest block mb-1">Capital</span>
+              <span class="text-xl font-bold text-on-surface">Bern</span>
+            </div>
+            <div>
+              <span class="text-xs text-outline uppercase font-bold tracking-widest block mb-1">Top Level Domain</span>
+              <span class="text-xl font-bold text-on-surface">.ch</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="text-xs text-outline uppercase font-bold tracking-widest block mb-2">Languages</span>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-4 py-1.5 bg-surface-container-low rounded-full text-sm font-medium">German</span>
+                <span class="px-4 py-1.5 bg-surface-container-low rounded-full text-sm font-medium">French</span>
+                <span class="px-4 py-1.5 bg-surface-container-low rounded-full text-sm font-medium">Italian</span>
+                <span class="px-4 py-1.5 bg-surface-container-low rounded-full text-sm font-medium">Romansh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Weather Card -->
+      <div
+        class="lg:col-span-4 bg-primary-container text-on-primary-container rounded-xl p-8 flex flex-col justify-between">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="headline-font text-xl font-bold mb-1">Weather in Bern</h3>
+            <p class="opacity-80 text-sm">Sunny with light breeze</p>
+          </div>
+          <span class="material-symbols-outlined text-4xl" data-weight="fill">light_mode</span>
+        </div>
+        <div class="py-8">
+          <div class="text-7xl font-extrabold headline-font mb-2">18°C</div>
+          <div class="flex gap-4 text-sm opacity-90">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">water_drop</span>
+              42%</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">air</span> 12
+              km/h</span>
+          </div>
+        </div>
+        <div
+          class="flex justify-between text-xs font-bold uppercase tracking-widest pt-4 border-t border-on-primary-container/20">
+          <span>High: 22°</span>
+          <span>Low: 9°</span>
+        </div>
+      </div>
+      <!-- Currency Card -->
+      <div class="lg:col-span-4 bg-surface-container-low rounded-xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="material-symbols-outlined p-2 bg-white rounded-lg text-primary">payments</span>
+          <h3 class="headline-font text-lg font-bold">Currency</h3>
+        </div>
+        <div class="mb-6">
+          <div class="text-3xl font-extrabold text-on-surface mb-1">CHF</div>
+          <p class="text-on-surface-variant text-sm">Swiss Franc</p>
+        </div>
+        <div class="bg-white rounded-lg p-4 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-outline">1 CHF</span>
+            <span class="font-bold text-on-surface">1.12 USD</span>
+          </div>
+          <div class="relative">
+            <input class="w-full pl-4 pr-12 py-2 bg-surface-container-low border-none rounded-lg text-sm font-bold"
+              type="number" value="100" />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-outline">CHF</span>
+          </div>
+          <div class="flex justify-center">
+            <span class="material-symbols-outlined text-outline text-sm">swap_vert</span>
+          </div>
+          <div class="relative">
+            <input
+              class="w-full pl-4 pr-12 py-2 bg-primary-fixed border-none rounded-lg text-sm font-bold text-on-primary-fixed-variant"
+              type="number" value="112.45" />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-outline">USD</span>
+          </div>
+        </div>
+      </div>
+      <!-- Map Card -->
+      <div class="lg:col-span-4 bg-surface-container-low rounded-xl overflow-hidden flex flex-col">
+        <div class="p-6 pb-0 flex justify-between items-center z-10">
+          <h3 class="headline-font text-lg font-bold">Geographic Location</h3>
+          <button class="text-primary text-sm font-bold hover:underline">Full Map</button>
+        </div>
+        <div class="flex-1 mt-4 relative">
+          <img class="w-full h-full object-cover"
+            data-alt="minimalist stylized satellite map of central europe switzerland highlighted with clean white and blue color scheme"
+            data-location="Bern, Switzerland"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmcVbv65deZDz_I2i-MP0yeb-0g47QIKRQ-FPLdQGhjqG-QF7drUILcyQmB_voYqwlHW46ty0MQ-8gAYC0R_KvoAwTqANM9aOpARwAYMZ1A_fnQD8GgkjLV7CnYg5BmyvEP_vn7FtokxL0Vpxuj50nWrbhar7omhJa5KbeoXYupRJ7X9pDxuB96veVuoNeJYDRFd_aGPf16i_NzAizLj6GFY2rOFvgWACQsewup6GFbkZHU5qd50OQnLPLH-wohjjBdSrCWUd41pe1" />
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <span class="material-symbols-outlined text-primary text-4xl" data-weight="fill">location_on</span>
+          </div>
+        </div>
+      </div>
+      <!-- Time & Timezone Card -->
+      <div
+        class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/15 flex flex-col justify-center items-center text-center">
+        <span class="text-xs text-outline uppercase font-bold tracking-widest mb-6">Local Time (Bern)</span>
+        <div class="text-6xl font-extrabold headline-font text-on-surface mb-2 tabular-nums">14:42</div>
+        <div class="text-primary font-bold mb-8">GMT +2 (CEST)</div>
+        <div class="w-full grid grid-cols-2 gap-4 pt-6 border-t border-outline-variant/15">
+          <div class="text-left">
+            <p class="text-[10px] text-outline uppercase font-bold">Sunrise</p>
+            <p class="font-bold">06:12 AM</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[10px] text-outline uppercase font-bold">Sunset</p>
+            <p class="font-bold">08:45 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Neighbor Countries Section -->
+    <section class="mt-12">
+      <div class="flex justify-between items-end mb-6">
+        <div>
+          <h2 class="headline-font text-2xl font-extrabold">Neighbor Countries</h2>
+          <p class="text-on-surface-variant text-sm">Explore bordering nations and regional connections.</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="p-2 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button class="p-2 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex overflow-x-auto pb-4 gap-6 no-scrollbar">
+        <!-- Germany -->
+        <div
+          class="min-w-[240px] bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+          <div class="h-32 rounded-lg overflow-hidden mb-4">
+            <img class="w-full h-full object-cover" data-alt="minimalist flat lay of germany flag bright vibrant colors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBejpUOc1mCZkA8w_XdE_m0KrxxfTwV9HrvZKkJBmUEH2nnKc6BTgNvh5YDMZCvRQ0qDExlfmoXg2RePLSl_hQ37vC6ZSfCXOTTRbsXMtfnzTqXoOyJ8uOnOxeaLyFRSTKQYoyFCVHJumG8Le59b9q5xt85blp9Aiy3ZK4mygcrrAD7plKq5pb30QJoyWyY745jGFb1rBFI3CY9Rgp5VSPqVmQIm4qH-Lmqh-eCm65cMZFSu2WTeKezDkHdTUHVdj7c6FPdGsAp7ESX" />
+          </div>
+          <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Germany</h4>
+          <p class="text-xs text-outline">Berlin • Central Europe</p>
+        </div>
+        <!-- France -->
+        <div
+          class="min-w-[240px] bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+          <div class="h-32 rounded-lg overflow-hidden mb-4">
+            <img class="w-full h-full object-cover" data-alt="minimalist flat lay of france flag bright vibrant colors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtBKHVauLJYZ2xcvRKiwdSFi8CSVGLStoRCDP0X9qwIy4ZXmH2NR_1Q3-uNi7taOv1tfs9qyLmAT8yCpeSEwq-y54sEUikPfkvYKH8_E9ajJ48AM9bOUxYeq5VBGMZo07ThixFvR2fF8IgVu6o8WHwB8Vr146ThXK_Fra9OuSQ7tTkjrjY_V6EIvVz8QO8Ivw8aNsvkTudJqJIkz6vhlROVUYYhx67iYWd3NrVjX8CgMV-AIXRzSF_0Tu_MSH7wMs2HugyHvNltkod" />
+          </div>
+          <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">France</h4>
+          <p class="text-xs text-outline">Paris • Western Europe</p>
+        </div>
+        <!-- Italy -->
+        <div
+          class="min-w-[240px] bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+          <div class="h-32 rounded-lg overflow-hidden mb-4">
+            <img class="w-full h-full object-cover" data-alt="minimalist flat lay of italy flag bright vibrant colors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiu4s08wUptDYmhqiHL4b0nyw8oZL7Ta3x4dtOcJA51Gzuind1YuEmDS6HjQczrbzaL8UqH7Q_EohD93SxCjLW3iKMatXN3DR0yw8mGVkgDdrEXtzjjpqLQuGUWv9KRrObqTWFktYfihM6jUC6--aP24kE_AGeNRzbfGFM7Q6rkX-gEBbmW2d1N4zyNRyEWRGPItvjsGcplXdzjrX5Jcu-RxwTtsNGgyg5NCzTVlyyNl3Fct4VmdGIYuE-ketTcju2KJFg3gYVfqbS" />
+          </div>
+          <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Italy</h4>
+          <p class="text-xs text-outline">Rome • Southern Europe</p>
+        </div>
+        <!-- Austria -->
+        <div
+          class="min-w-[240px] bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+          <div class="h-32 rounded-lg overflow-hidden mb-4">
+            <img class="w-full h-full object-cover" data-alt="minimalist flat lay of austria flag bright vibrant colors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNPgwUTOMjVbOd7cLS_G95KeIZCmcLVdX1IO6Ij-87KBJq5FxfREDP83EwJM377_TrcPoMpQFHbXXF1BhAXrX3ddcJ9ylXrkJxEeiSJHDNs8TXrbV_zZsWGZZcbzQJk1k4A7ROM642W9R7aj5Sub6S8AVIO61RpD4tQuiL4Kv-SN3XyrSLZGRw1r7eJFLof39_2P43WN6uTZyonvZ-P4nxL8cnKytsfB0jJd-MXEfIScS3VDGx8tmztYa6S0zq04BCTY26-0Gh2CcL" />
+          </div>
+          <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Austria</h4>
+          <p class="text-xs text-outline">Vienna • Central Europe</p>
+        </div>
+        <!-- Liechtenstein -->
+        <div
+          class="min-w-[240px] bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+          <div class="h-32 rounded-lg overflow-hidden mb-4">
+            <img class="w-full h-full object-cover"
+              data-alt="minimalist flat lay of liechtenstein flag bright vibrant colors"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpLBK3kWlz9KZs6TvbxxcUU8WBCJOz2yf0bHEJuN1gQtYwqmoBEfsGoW6yzqcrdfwl1Uk-vscKVhfSfe_pMDrXF2E7u1GC0223PLzax9LU35elDnYM_dYMoVdfjjaNxF67MWRuLtUMGnmAjvT8zVBhxgRleT_GMf1eTQomP5dAMdVJWavhycwDGTXeFkzPwchfyiBFakOyrHAcCMjIPEvMPH_mVkh3WcdPM-HrPJtqjfxAosQA-VaS9FacP0Nd1MUx9ZaZLY4J733W" />
+          </div>
+          <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">Liechtenstein</h4>
+          <p class="text-xs text-outline">Vaduz • Central Europe</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 mt-auto">
+    <div
+      class="flex flex-col md:flex-row justify-between items-center px-8 max-w-[1440px] mx-auto space-y-4 md:space-y-0">
+      <div class="flex flex-col items-center md:items-start space-y-2">
+        <p class="text-sm font-medium Inter text-slate-500 dark:text-slate-400">© 2024 Global Explorer Dashboard.
+          Precision Transparency.</p>
+        <p class="text-xs font-medium text-slate-400 dark:text-slate-600">Built with REST APIs and Modern SaaS
+          Architecture.</p>
+      </div>
+      <div class="flex gap-8">
+        <a class="text-sm font-medium Inter text-slate-400 dark:text-slate-600 hover:text-indigo-500 underline decoration-2 underline-offset-4 transition-all duration-300"
+          href="#">GitHub</a>
+        <a class="text-sm font-medium Inter text-slate-400 dark:text-slate-600 hover:text-indigo-500 underline decoration-2 underline-offset-4 transition-all duration-300"
+          href="#">Portfolio</a>
+        <a class="text-sm font-medium Inter text-slate-400 dark:text-slate-600 hover:text-indigo-500 underline decoration-2 underline-offset-4 transition-all duration-300"
+          href="#">Documentation</a>
+        <a class="text-sm font-medium Inter text-slate-400 dark:text-slate-600 hover:text-indigo-500 underline decoration-2 underline-offset-4 transition-all duration-300"
+          href="#">Contact Support</a>
+      </div>
+    </div>
+  </footer>
+</body>
+
 </html>

@@ -1,0 +1,30 @@
+{
+  "name": "country-api",
+  "version": "1.0.0",
+  "description": "Global Explorer Dashboard is a web-based application that allows users to search and explore detailed information about countries. The platform aggregates data from multiple external APIs to provide real-time insights such as weather, currency exchange rates, local time, and geographic location in a single unified interface.",
+  "keywords": [
+    "javascript",
+    "restapi",
+    "countryapi"
+  ],
+  "homepage": "https://github.com/Tokiosman80F/country-api#readme",
+  "bugs": {
+    "url": "https://github.com/Tokiosman80F/country-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tokiosman80F/country-api.git"
+  },
+  "license": "ISC",
+  "author": "Toki osman",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19"
+  }
+}
